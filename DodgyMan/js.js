@@ -7,7 +7,9 @@ class Player{
         this.size = 30;
     }
     draw(){
-        circle(mouseX,mouseY,this.size)
+      this.x = mouseX;
+      this.y = mouseY;
+        circle(this.x,this.y,this.size)
     }
 }
 
@@ -29,9 +31,35 @@ class Enemy{
 class Powerup{
     constructor(){
         this.x=0;
+        this.color;
         this.y=0;
         this.type = "string";
+        this.picked = false;
         this.isUsed = false;
+        this.powerUp = Math.floor(Math.random() * 4)+1;
+
+    }
+    //set powerup type for powerup
+    chooser(){
+      if(!this.isUsed){
+        this.isUsed = true;
+        switch (this.powerUp) {
+          case 1:
+            this.type = "DoublePoints"
+            break;
+          case 2:
+            this.type = "ExtraLife"
+            break;
+          case 3:
+            this.type = "Clear"
+            break;
+          case 1:
+            this.type = "KillMode"
+            break;
+          default:
+            this.type = "DoublePoints"
+        }
+      }
     }
 }
 
