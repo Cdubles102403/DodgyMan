@@ -1,5 +1,21 @@
-//player class
-//player class
+//pick starting value for enemys and return them in array
+function picker(){
+    var rnd = Math.floor(Math.random() * 2)+1;
+    if(rnd ==1){
+        var x = 0;
+        var y = Math.floor(Math.random() *500)
+        return [x,y];
+    }
+    else if(rnd == 2){
+        var x = 0;
+        var y = Math.floor(Math.random() *1000)
+        return [x,y];    
+    }
+    else{
+        console.log("broken");
+    }
+}
+//Player class
 class Player{
     constructor(){
         this.x=Math.floor(Math.random() * 1000);
@@ -9,17 +25,16 @@ class Player{
         this.speed = 5;
     }
     draw(){
-
         circle(this.x,this.y,this.size)
     }
 }
-
 //enemy class
 class Enemy{
     constructor(){
-       this.x = Math.floor(Math.random() * 1000);
-       this.y = Math.floor(Math.random() * 500);
-        this.speed=5;
+        this.values = picker();
+       this.x = this.values[0];
+       this.y =this.values[1];
+        this.speed=Math.floor(Math.random() * 9)+4;
         this.size=20;
     }
     move(){
@@ -27,11 +42,24 @@ class Enemy{
         this.y+=1;
         square(this.x, this.y, this.size, 2);
     }
-    remake(){
-        
+    check(){
+     if(this.x>1050 || this.x<-10 || this.y>590 || this.y <-10){
+        this.values = picker(); 
+        this.x = this.values[0];
+        this.y = this.values[1];
+        this.speed=Math.floor(Math.random() * 9)+4;
+        }  
+    }
+    collision(x,y,size){
+    var hit = false;
+    hit = collideRectCircle(this.x,this.y,this.size,this.size,x,y,size);
+    return hit;
+    if(hit){
+        console.log("hit");
+    }
+        }
     }
     
-}
 //powerUp class
 class Powerup{
     constructor(){
@@ -79,7 +107,6 @@ function setup() {
     background('teals');
      enemys = [];
     Player = new Player();
-    enemy = new Enemy();
     PU = new Powerup();
     for(var i=0;i<50;i++){
         enemys[i] = new Enemy();
@@ -88,12 +115,13 @@ function setup() {
 }
     
 function draw() {
-    background('teal'); // "clears" canvas
-    enemy.move(); 
+    background('teal'); // "clears" canvas 
     PU.draw();
-    console.log(enemys[2])
+    //console.log(enemys[2])
     for(var j = 0; j<enemys.length; j++){
         enemys[j].move();
+        enemys[j].check();
+        enemys[j].collision(Player.x,Player.y,Player.size);
     }
     //player controls
     //up
