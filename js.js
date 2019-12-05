@@ -23,9 +23,14 @@ class Player{
         this.hasPowerUp = false;
         this.size = 30;
         this.speed = 5;
+        this.lives = 3;
     }
     draw(){
         circle(this.x,this.y,this.size)
+    }
+    //functionf for when player hits enemy
+    hitEnemy(){
+        this.lives --;
     }
 }
 //enemy class
@@ -113,7 +118,7 @@ function setup() {
     }
     
 }
-    
+    var hits = false;
 function draw() {
     background('teal'); // "clears" canvas 
     PU.draw();
@@ -121,7 +126,12 @@ function draw() {
     for(var j = 0; j<enemys.length; j++){
         enemys[j].move();
         enemys[j].check();
-        enemys[j].collision(Player.x,Player.y,Player.size);
+        //checks for player - enemy collision
+        hits = enemys[j].collision(Player.x,Player.y,Player.size);
+        if(hits){
+            console.log("system works");
+            Player.hitEnemy();
+        }
     }
     //player controls
     //up
