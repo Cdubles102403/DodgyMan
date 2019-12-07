@@ -2,14 +2,14 @@
 function picker(){
     var rnd = Math.floor(Math.random() * 2)+1;
     if(rnd ==1){
-        var x = 0;
-        var y = Math.floor(Math.random() *500)
+        var x = Math.floor(Math.random() *1000);
+        var y = 0;
         return [x,y];
     }
     else if(rnd == 2){
         var x = 0;
-        var y = Math.floor(Math.random() *1000)
-        return [x,y];    
+        var y = Math.floor(Math.random() *500)
+        return [x,y];
     }
     else{
         console.log("broken");
@@ -28,7 +28,7 @@ class Player{
     draw(){
         circle(this.x,this.y,this.size)
     }
-    //functionf for when player hits enemy
+    //function for when player hits enemy
     hitEnemy(){
         this.lives --;
     }
@@ -39,8 +39,8 @@ class Enemy{
         this.values = picker();
        this.x = this.values[0];
        this.y =this.values[1];
-        this.speed=Math.floor(Math.random() * 9)+4;
-        this.size=20;
+        this.speed=Math.floor(Math.random() * 9)+7;
+        this.size=10;
     }
     move(){
         this.x+=this.speed;
@@ -49,12 +49,13 @@ class Enemy{
     }
     check(){
      if(this.x>1050 || this.x<-10 || this.y>590 || this.y <-10){
-        this.values = picker(); 
+        this.values = picker();
         this.x = this.values[0];
         this.y = this.values[1];
-        this.speed=Math.floor(Math.random() * 9)+4;
-        }  
+        this.speed=Math.floor(Math.random() * 9)+7;
+        }
     }
+    //check for collisions with player
     collision(x,y,size){
     var hit = false;
     hit = collideRectCircle(this.x,this.y,this.size,this.size,x,y,size);
@@ -64,7 +65,7 @@ class Enemy{
     }
         }
     }
-    
+
 //powerUp class
 class Powerup{
     constructor(){
@@ -104,7 +105,7 @@ class Powerup{
          var y = this.y;
         triangle(x, y, x+20, y+20, x-20, y+20);
     }
-    
+
 }
 
 function setup() {
@@ -113,14 +114,14 @@ function setup() {
      enemys = [];
     Player = new Player();
     PU = new Powerup();
-    for(var i=0;i<50;i++){
+    for(var i=0;i<30;i++){
         enemys[i] = new Enemy();
     }
-    
+
 }
     var hits = false;
 function draw() {
-    background('teal'); // "clears" canvas 
+    background('teal'); // "clears" canvas
     PU.draw();
     //console.log(enemys[2])
     for(var j = 0; j<enemys.length; j++){
