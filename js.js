@@ -2,20 +2,42 @@
 function picker() {
 
 
-    var rnd = Math.floor(Math.random() * 2) + 1;
+    var rnd = Math.floor(Math.random() * 4) + 1;
     var rnd2 = Math.floor(Math.random() * 2) + 1;
-    mult = -1;
-    if(rnd2 === 1) {
-      var mult = 1;
+    var rnd3 = Math.floor(Math.random() * 2) + 1;
+    var mult = -1;
+    var mult2 = -1;
+    if(rnd2 == 1) {
+       mult = 1;
     }
+    if(rnd3 == 1){
+       mult = 1;
+       }
+    //1040, 580
     if (rnd === 1) {
-        var x = Math.floor(Math.random() * 500);
+        //top
+        var x = Math.floor(Math.random() * 580);
         var y = 0;
-        return [x, y, mult];
+        mult2 = 1;
+        return [x, y, mult, mult2];
     } else if (rnd === 2) {
+        //left
         var x = 0;
-        var y = Math.floor(Math.random() * 1000)
-        return [x, y, mult];
+        var y = Math.floor(Math.random() * 1040);
+        return [x, y, mult, mult2];
+    }
+    else if(rnd === 3){
+        //right
+        var x = 1040;
+        var y = Math.floor(Math.random() * 580);
+        return [x, y, mult, mult2];
+   }
+    else if(rnd === 4){
+        //bottom
+        var x = Math.floor(Math.random() * 1040);
+        var y = 580;
+        mult2 = -1;
+        return [x, y, mult, mult2];
     }
 }
 //Player class
@@ -43,21 +65,25 @@ class Enemy {
       this.x = this.values[0];
       this.y = this.values[1];
       this.mult = this.values[2];
-      this.speed = Math.floor((Math.random() * 9) + 7) * this.mult;
+      this.mult2 = this.values[3];
+
+      this.speed = Math.floor((Math.random() * 9) + 7);
         this.size = 10;
     }
     move() {
-        this.x += this.speed;
-        this.y += 1;
+   //     console.log(this.mult+ this.mult2);
+        this.x += 3 * this.mult;
+        this.y += 3 * this.mult2;
         square(this.x, this.y, this.size, 2);
     }
     check() {
-        if (this.x > 1050 || this.x < -10 || this.y > 590 || this.y < -10) {
+        if (this.x > 1050 || this.x < -20 || this.y > 590 || this.y < -20) {
             this.values = picker();
             this.x = this.values[0];
             this.y = this.values[1];
             this.mult = this.values[2];
-            this.speed = Math.floor((Math.random() * 9) + 7) * this.mult;
+            this.mult2 = this.values[3];
+            this.speed = Math.floor((Math.random() * 9) + 7);
         }
 
     }
@@ -142,6 +168,10 @@ function draw() {
             Player.hitEnemy();
         }
     }
+    //player collision with power up
+    if(){
+       
+       }
     //player controls
     //up
     if (keyIsDown(38)) {
