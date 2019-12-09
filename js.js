@@ -1,14 +1,21 @@
 //  pick starting value for enemys and return them in array
 function picker() {
+
+
     var rnd = Math.floor(Math.random() * 2) + 1;
+    var rnd2 = Math.floor(Math.random() * 2) + 1;
+    mult = -1;
+    if(rnd2 === 1) {
+      var mult = 1;
+    }
     if (rnd === 1) {
-        var x = Math.floor(Math.random() * 1000);
+        var x = Math.floor(Math.random() * 500);
         var y = 0;
-        return [x, y];
+        return [x, y, mult];
     } else if (rnd === 2) {
         var x = 0;
-        var y = Math.floor(Math.random() * 500)
-        return [x, y];
+        var y = Math.floor(Math.random() * 1000)
+        return [x, y, mult];
     }
 }
 //Player class
@@ -32,10 +39,11 @@ class Player {
 //enemy class
 class Enemy {
     constructor() {
-        this.values = picker();
-        this.x = this.values[0];
-        this.y = this.values[1];
-        this.speed = Math.floor(Math.random() * 9) + 7;
+      this.values = picker();
+      this.x = this.values[0];
+      this.y = this.values[1];
+      this.mult = this.values[2];
+      this.speed = Math.floor((Math.random() * 9) + 7) * this.mult;
         this.size = 10;
     }
     move() {
@@ -48,9 +56,12 @@ class Enemy {
             this.values = picker();
             this.x = this.values[0];
             this.y = this.values[1];
-            this.speed = Math.floor(Math.random() * 9) + 7;
+            this.mult = this.values[2];
+            this.speed = Math.floor((Math.random() * 9) + 7) * this.mult;
         }
+
     }
+
     //check for collisions with player
     collision(x, y, size) {
         var hit = false;
