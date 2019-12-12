@@ -58,11 +58,11 @@ class Player {
         this.x = Math.floor(Math.random() * 1000);
         this.y = Math.floor(Math.random() * 500);
         this.size = 30;
-        this.pointMult = 1;
+        this.pointMult = 2;
         this.speed = 5;
         this.lives = 3;
         this.points = 0;
-        this.killMode = false;
+        this.killMode = true;
     }
     
     draw() {
@@ -92,7 +92,10 @@ class Player {
                     console.log("error in powerup player function");
         }
     }
-
+    clear(){
+        this.pointMult =1;
+        this.killMode = false;
+    }
 }
 //enemy class
 class Enemy {
@@ -154,7 +157,7 @@ class Powerup {
         this.y = Math.floor(Math.random() * 500);
         this.type = "string";
         this.powerUp = Math.floor(Math.random() * 4) + 1;
-        this.hitTime = 0;
+        this.hitTime = 10;
         this.used= false;
         this.powerHit = false;
 
@@ -181,15 +184,17 @@ class Powerup {
     }
     //draw power up
     draw() {
-        if(time >= this.hitTime + 10 && this.powerHit){
+        if(time-10 >= this.hitTime  && this.powerHit){
         this.powerHit =false;
-        this.hitTime  =0;
+        this.hitTime  = frameCount / 60;
         this.x = Math.floor(Math.random() * 1000);
         this.y = Math.floor(Math.random() * 500);
-           }
+        this.notPowered = true;
+            }
         var x = this.x;
         var y = this.y;
         triangle(x, y, x + 20, y + 20, x - 20, y + 20);
+        
     }
     //move poweup when hit
     hit(){
@@ -201,6 +206,7 @@ class Powerup {
         this.y = 1000;
         this.powerUp = Math.floor(Math.random() * 4) + 1;
         this.chooser();
+
     }
 
 }
@@ -214,12 +220,13 @@ function setup() {
     for (var i = 0; i < 20; i++) {
         enemys[i] = new Enemy();
     }
-
+    var notPowered = true;
 }
 var time;
 var hits = false;
 var poly = [];
 function draw() {
+    
     time = frameCount / 60; // gets how many seconds the game has been running
     background('teal'); // "clears" canvas
     PU.draw();
@@ -239,6 +246,7 @@ function draw() {
         }
     }
     
+    
     //player collision with power up
     poly[0] = createVector(PU.x, PU.y); //fills array with points of powerup
     poly[1] = createVector(PU.x+20, PU.y+20);
@@ -250,6 +258,11 @@ function draw() {
         Player.powerUp(PU.type);
         PU.hit();
       }
+    
+    if(!this.notPowered){
+       Player.clear();
+        notPowered = true;
+       }
     //player controls
     //up
     if (keyIsDown(38)) {
@@ -270,6 +283,7 @@ function draw() {
     if (keyIsDown(39)) {
         Player.x += Player.speed;
     }
-    
+    console.log(Player.killMode);
+    console.log(Player.pointMult);
     Player.draw();
 }
