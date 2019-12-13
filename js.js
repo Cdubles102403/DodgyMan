@@ -6,13 +6,9 @@ function picker() {
     var mult = -1;
     var mult2 = -1;
     
-    if(rnd2 == 1) {
+    if(rnd2 == 1 || rnd3 == 1) {
        mult = 1;
     }
-    
-    if(rnd3 == 1){
-       mult = 1;
-       }
     
     //1040, 580
     if (rnd === 1) {
@@ -52,20 +48,26 @@ function clearField(){
         enemys[j].hit();
     }
 }
+
+
+    
 //Player class
 class Player {
     constructor() {
         this.x = Math.floor(Math.random() * 1000);
         this.y = Math.floor(Math.random() * 500);
         this.size = 30;
-        this.pointMult = 2;
+        this.pointMult = 1;
         this.speed = 5;
-        this.lives = 3;
+        this.lives = 5;
         this.points = 0;
-        this.killMode = true;
+        this.color =  color('white');
+        this.killMode = false;
     }
     
     draw() {
+        fill(this.color);
+        noStroke();
         circle(this.x, this.y, this.size)
     }
     
@@ -86,15 +88,22 @@ class Player {
                     clearField();
                     break;
                 case "KillMode":
+                    this.color = color('red');
                     this.killMode = true;
                     break;
                 default:
                     console.log("error in powerup player function");
         }
     }
-    clear(){
+    clearPower(){
         this.pointMult =1;
         this.killMode = false;
+    }
+    checkDie(){
+        if(this.lives<=0){
+            //alert("game over");
+            gameReset();
+        }
     }
 }
 //enemy class
@@ -114,6 +123,7 @@ class Enemy {
    //     console.log(this.mult+ this.mult2);
         this.x += 3 * this.mult;
         this.y += 3 * this.mult2;
+        fill('hsl(160, 100%, 50%)');
         square(this.x, this.y, this.size, 2);
     }
     
@@ -189,10 +199,12 @@ class Powerup {
         this.hitTime  = frameCount / 60;
         this.x = Math.floor(Math.random() * 1000);
         this.y = Math.floor(Math.random() * 500);
-        this.notPowered = true;
+        Player.clearPower();
+        Player.color = color('white');
             }
         var x = this.x;
         var y = this.y;
+        fill('rgb(0,255,0)');
         triangle(x, y, x + 20, y + 20, x - 20, y + 20);
         
     }
@@ -213,22 +225,24 @@ class Powerup {
 
 function setup() {
     createCanvas(1040, 580);
-    background('teals');
+    background('black');
     enemys = [];
     Player = new Player();
     PU = new Powerup();
     for (var i = 0; i < 20; i++) {
         enemys[i] = new Enemy();
     }
-    var notPowered = true;
 }
 var time;
 var hits = false;
 var poly = [];
 function draw() {
-    
+    console.log(Player.points);
+    document.getElementById("score").innerHTML = "score is: " + Player.points;
+    document.getElementById("lives").innerHTML = "lives: " + Player.lives;
+
     time = frameCount / 60; // gets how many seconds the game has been running
-    background('teal'); // "clears" canvas
+    background('black'); // "clears" canvas
     PU.draw();
     
     //moves enemys around
@@ -240,9 +254,12 @@ function draw() {
             //console.log("system works");
             //if player has kill mode on 
             if(Player.killMode){
-                enemys[j].hit();           
+                enemys[j].hit();
+                Player.points+=5;
                }
-            else{Player.hitEnemy();}
+            else{Player.hitEnemy();
+                enemys[j].hit();
+                }
         }
     }
     
@@ -251,18 +268,14 @@ function draw() {
     poly[0] = createVector(PU.x, PU.y); //fills array with points of powerup
     poly[1] = createVector(PU.x+20, PU.y+20);
     poly[2] = createVector(PU.x-20, PU.y+20);
-    hit = collideCirclePoly(Player.x,Player.y,45,poly); //checks if power up and player are colliding 
+    hit = collideCirclePoly(Player.x,Player.y,Player.size,poly,false); //checks if power up and player are colliding 
     //if player hits powerup
     if(hit){
        console.log(PU.type);    
         Player.powerUp(PU.type);
         PU.hit();
       }
-    
-    if(!this.notPowered){
-       Player.clear();
-        notPowered = true;
-       }
+
     //player controls
     //up
     if (keyIsDown(38)) {
@@ -283,7 +296,14 @@ function draw() {
     if (keyIsDown(39)) {
         Player.x += Player.speed;
     }
-    console.log(Player.killMode);
-    console.log(Player.pointMult);
     Player.draw();
+    Player.checkDie();
+}
+
+function gameReset(){ //called after player dies
+    Player.points=0;
+    Player.lives = 5;
+    for(var j = 0; j < enemys.length; j++){
+        enemys[j].hit();
+    }
 }
