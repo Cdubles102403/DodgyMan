@@ -77,7 +77,7 @@ class Player {
     } 
     powerUp(PowerUp){
     this.points +=10;
-     switch (PowerUp) {
+     switch (PowerUp) { // switch block sets power up for player
                 case "DoublePoints":
                     this.pointMult = 2;
                     break;
@@ -101,8 +101,8 @@ class Player {
     }
     checkDie(){
         if(this.lives<=0){
-            //alert("game over");
             gameReset();
+            alert("game over");
         }
     }
 }
@@ -217,25 +217,25 @@ class Powerup {
         this.x = 1000;
         this.y = 1000;
         this.powerUp = Math.floor(Math.random() * 4) + 1;
-        this.chooser();
+        this.chooser(); //set new powerup
 
     }
 
 }
-
+//sets basic info for game
 function setup() {
     createCanvas(1040, 580);
     background('black');
     enemys = [];
     Player = new Player();
     PU = new Powerup();
-    for (var i = 0; i < 20; i++) {
+    for (var i = 0; i < 20; i++) { // fills enemy array
         enemys[i] = new Enemy();
     }
 }
 var time;
-var hits = false;
-var poly = [];
+var hits = false; // make boolean for enemy - player collisionxs
+var poly = []; // array for points on powerup triangle
 function draw() {
     console.log(Player.points);
     document.getElementById("score").innerHTML = "score is: " + Player.points;
@@ -245,10 +245,10 @@ function draw() {
     background('black'); // "clears" canvas
     PU.draw();
     
-    //moves enemys around
+    //moves enemys around and checks collisions
     for (var j = 0; j < enemys.length; j++) {
-        enemys[j].move();
-        enemys[j].check();        
+        enemys[j].move(); //move enemy around
+        enemys[j].check();  //check if enemy is inside area      
         hits = enemys[j].collision(Player.x, Player.y, Player.size);//checks for player - enemy collision
         if (hits) {
             //console.log("system works");
@@ -300,7 +300,7 @@ function draw() {
     Player.checkDie();
 }
 
-function gameReset(){ //called after player dies
+function gameReset(){ //called after player dies for reset
     Player.points=0;
     Player.lives = 5;
     for(var j = 0; j < enemys.length; j++){
