@@ -96,7 +96,7 @@ class Player {
     checkDie() {
         if (this.lives <= 0) {
             gameReset();
-            //alert("game over");
+           // alert("game over");
         }
     }
 }
@@ -278,22 +278,22 @@ function draw() {
 
     //player controls
     //up
-    if (keyIsDown(38) && !this.pause) {
+    if (keyIsDown(38) && !this.pause && Player.y>=0+Player.size/2) {
         Player.y -= Player.speed;
     }
 
     //down
-    if (keyIsDown(40) && !this.pause) {
+    if (keyIsDown(40) && !this.pause && Player.y<=580 - Player.size/2) {
         Player.y += Player.speed;
     }
 
     //left
-    if (keyIsDown(37) && !this.pause) {
+    if (keyIsDown(37) && !this.pause && Player.x>=0+Player.size/2) {
         Player.x -= Player.speed;
     }
 
     //right
-    if (keyIsDown(39) && !this.pause) {
+    if (keyIsDown(39) && !this.pause && Player.x<=1040 -Player.size/2 ) {
         Player.x += Player.speed;
     }
     Player.draw();
